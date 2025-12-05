@@ -1,0 +1,46 @@
+object Form2: TForm2
+  Left = 0
+  Top = 0
+  Caption = 'Form2'
+  ClientHeight = 480
+  ClientWidth = 640
+  Position = ScreenCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object PathLabel1: TPathLabel
+    Position.X = 240.000000000000000000
+    Position.Y = 328.000000000000000000
+  end
+  object SVGButton1: TSVGButton
+    Position.X = 136.000000000000000000
+    Position.Y = 111.000000000000000000
+    Size.Width = 193.000000000000000000
+    Size.Height = 65.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'SVGButton1'
+    IconSize = 30
+    IconPadding.Left = 8.000000000000000000
+    IconColor = xFF1E88E5
+    IconColorHover = xFF409AE9
+    IconColorDown = xFF1974C3
+    IconColorDisabled = xFFB0BEC5
+    IconSecondaryColor = xFF90CAF9
+  end
+  object SVGSpeedButton1: TSVGSpeedButton
+    Position.X = 136.000000000000000000
+    Position.Y = 184.000000000000000000
+    Size.Width = 65.000000000000000000
+    Size.Height = 65.000000000000000000
+    Size.PlatformDefault = False
+    IconSize = 40
+    IconColor = xFF1E88E5
+    IconColorHover = xFF409AE9
+    IconColorDown = xFF1974C3
+    IconColorDisabled = xFFB0BEC5
+    IconSecondaryColor = xFF90CAF9
+  end
+end
