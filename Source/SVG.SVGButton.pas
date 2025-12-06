@@ -288,7 +288,7 @@ constructor TSVGButton.Create(AOwner: TComponent);
 begin
   inherited;
 
-  FIconSize := 20;
+  FIconSize := 16;
   FIconAlignment := iaLeft;
 
   FIconColor := TIconTheme.GetPrimaryColor;
@@ -540,8 +540,8 @@ constructor TSVGSpeedButton.Create(AOwner: TComponent);
 begin
   inherited;
 
-  FIconSize := 20;
-  FIconAlignment := iaCenter;
+  FIconSize := 16;
+  FIconAlignment := iaLeft;
 
   FIconColor := TIconTheme.GetPrimaryColor;
   FIconColorHover := TIconTheme.Lighten(FIconColor, 0.15);
