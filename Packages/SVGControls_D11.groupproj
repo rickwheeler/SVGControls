@@ -3,13 +3,13 @@
         <ProjectGuid>{A4B386C0-8BEF-4C25-ACD4-4627DC2EE705}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="..\Demo\SVGControlsDemo.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="SVG.Controls.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="SVG.DesignTime.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\Demo\SVGControlsDemo.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -20,15 +20,6 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="SVGControlsDemo">
-        <MSBuild Projects="..\Demo\SVGControlsDemo.dproj"/>
-    </Target>
-    <Target Name="SVGControlsDemo:Clean">
-        <MSBuild Projects="..\Demo\SVGControlsDemo.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="SVGControlsDemo:Make">
-        <MSBuild Projects="..\Demo\SVGControlsDemo.dproj" Targets="Make"/>
-    </Target>
     <Target Name="SVG_Controls">
         <MSBuild Projects="SVG.Controls.dproj"/>
     </Target>
@@ -47,14 +38,23 @@
     <Target Name="SVG_DesignTime:Make">
         <MSBuild Projects="SVG.DesignTime.dproj" Targets="Make"/>
     </Target>
+    <Target Name="SVGControlsDemo">
+        <MSBuild Projects="..\Demo\SVGControlsDemo.dproj"/>
+    </Target>
+    <Target Name="SVGControlsDemo:Clean">
+        <MSBuild Projects="..\Demo\SVGControlsDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SVGControlsDemo:Make">
+        <MSBuild Projects="..\Demo\SVGControlsDemo.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="SVGControlsDemo;SVG_Controls;SVG_DesignTime"/>
+        <CallTarget Targets="SVG_Controls;SVG_DesignTime;SVGControlsDemo"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="SVGControlsDemo:Clean;SVG_Controls:Clean;SVG_DesignTime:Clean"/>
+        <CallTarget Targets="SVG_Controls:Clean;SVG_DesignTime:Clean;SVGControlsDemo:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="SVGControlsDemo:Make;SVG_Controls:Make;SVG_DesignTime:Make"/>
+        <CallTarget Targets="SVG_Controls:Make;SVG_DesignTime:Make;SVGControlsDemo:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

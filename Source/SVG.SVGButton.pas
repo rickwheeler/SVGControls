@@ -29,6 +29,10 @@ type
 
     FTextObj: TText;
 
+    FHoverSetManually: Boolean;
+    FDownSetManually: Boolean;
+    FDisabledSetManually: Boolean;
+
     procedure IconPaddingChanged(Sender: TObject);
 
     procedure SetIconName(const Value: string);
@@ -37,13 +41,15 @@ type
     procedure SetIconPadding(const Value: TBounds);
 
     procedure SetIconColor(const Value: TAlphaColor);
+    procedure SetIconColorDisabled(const Value: TAlphaColor);
+    procedure SetIconColorDown(const Value: TAlphaColor);
+    procedure SetIconColorHover(const Value: TAlphaColor);
     procedure SetIconSecondaryColor(const Value: TAlphaColor);
 
     procedure UpdateIconGeometry;
     procedure UpdateIconLayout;
     procedure UpdateTextLayout;
     procedure UpdateIconColors;
-
   protected
     procedure ApplyStyle; override;
     procedure Resize; override;
@@ -65,9 +71,9 @@ type
     property IconPadding: TBounds read FIconPadding write SetIconPadding;
 
     property IconColor: TAlphaColor read FIconColor write SetIconColor;
-    property IconColorHover: TAlphaColor read FIconColorHover write FIconColorHover;
-    property IconColorDown: TAlphaColor read FIconColorDown write FIconColorDown;
-    property IconColorDisabled: TAlphaColor read FIconColorDisabled write FIconColorDisabled;
+    property IconColorHover: TAlphaColor read FIconColorHover write SetIconColorHover;
+    property IconColorDown: TAlphaColor read FIconColorDown write SetIconColorDown;
+    property IconColorDisabled: TAlphaColor read FIconColorDisabled write SetIconColorDisabled;
 
     property IconSecondaryColor: TAlphaColor read FIconSecondaryColor write SetIconSecondaryColor;
   end;
@@ -91,6 +97,10 @@ type
 
     FTextObj: TText;
 
+    FHoverSetManually: Boolean;
+    FDownSetManually: Boolean;
+    FDisabledSetManually: Boolean;
+
     procedure IconPaddingChanged(Sender: TObject);
 
     procedure SetIconName(const Value: string);
@@ -99,13 +109,15 @@ type
     procedure SetIconPadding(const Value: TBounds);
 
     procedure SetIconColor(const Value: TAlphaColor);
+    procedure SetIconColorDisabled(const Value: TAlphaColor);
+    procedure SetIconColorDown(const Value: TAlphaColor);
+    procedure SetIconColorHover(const Value: TAlphaColor);
     procedure SetIconSecondaryColor(const Value: TAlphaColor);
 
     procedure UpdateIconGeometry;
     procedure UpdateIconLayout;
     procedure UpdateTextLayout;
     procedure UpdateIconColors;
-
   protected
     procedure ApplyStyle; override;
     procedure Resize; override;
@@ -127,9 +139,9 @@ type
     property IconPadding: TBounds read FIconPadding write SetIconPadding;
 
     property IconColor: TAlphaColor read FIconColor write SetIconColor;
-    property IconColorHover: TAlphaColor read FIconColorHover write FIconColorHover;
-    property IconColorDown: TAlphaColor read FIconColorDown write FIconColorDown;
-    property IconColorDisabled: TAlphaColor read FIconColorDisabled write FIconColorDisabled;
+    property IconColorHover: TAlphaColor read FIconColorHover write SetIconColorHover;
+    property IconColorDown: TAlphaColor read FIconColorDown write SetIconColorDown;
+    property IconColorDisabled: TAlphaColor read FIconColorDisabled write SetIconColorDisabled;
 
     property IconSecondaryColor: TAlphaColor read FIconSecondaryColor write SetIconSecondaryColor;
   end;
@@ -142,6 +154,15 @@ uses
   System.Math;
 
 { ----------------------------- Helpers ------------------------------ }
+
+//function ApplyOpacity(Color: TAlphaColor; Opacity: Single): TAlphaColor;
+//var
+//  C: TAlphaColorRec;
+//begin
+//  C := TAlphaColorRec(Color);
+//  C.A := Round(C.A * Opacity);
+//  Result := TAlphaColor(C);
+//end;
 
 function FindTextControl(Styled: TStyledControl): TText;
 var
@@ -317,6 +338,8 @@ begin
   inherited;
   FTextObj := FindTextControl(Self);
   UpdateTextLayout;
+  if FIconName <> '' then
+    UpdateIconGeometry;
   UpdateIconColors;
 end;
 
@@ -377,6 +400,46 @@ begin
   if FIconColor <> Value then
   begin
     FIconColor := Value;
+
+    if not FHoverSetManually then
+      FIconColorHover := TIconTheme.Lighten(Value, 0.15);
+
+    if not FDownSetManually then
+      FIconColorDown := TIconTheme.Darken(Value, 0.15);
+
+    if not FDisabledSetManually then
+      FIconColorDisabled := TIconTheme.GetDisabledColor;
+
+    UpdateIconColors;
+  end;
+end;
+
+procedure TSVGButton.SetIconColorDisabled(const Value: TAlphaColor);
+begin
+  if FIconColorDisabled <> Value then
+  begin
+    FIconColorDisabled := Value;
+    FDisabledSetManually := True;
+    UpdateIconColors;
+  end;
+end;
+
+procedure TSVGButton.SetIconColorDown(const Value: TAlphaColor);
+begin
+  if FIconColorDown <> Value then
+  begin
+    FIconColorDown := Value;
+    FDownSetManually := True;
+    UpdateIconColors;
+  end;
+end;
+
+procedure TSVGButton.SetIconColorHover(const Value: TAlphaColor);
+begin
+  if FIconColorHover <> Value then
+  begin
+    FIconColorHover := Value;
+    FHoverSetManually := True;
     UpdateIconColors;
   end;
 end;
@@ -386,7 +449,12 @@ begin
   if FIconName <> Value then
   begin
     FIconName := Value;
-    UpdateIconGeometry;
+
+    // If style not yet loaded, defer update
+    if (FBasePath <> nil) and (FIconLayout <> nil) then
+      UpdateIconGeometry
+    else
+      Repaint; // schedule update for later
   end;
 end;
 
@@ -519,6 +587,8 @@ begin
   inherited;
   FTextObj := FindTextControl(Self);
   UpdateTextLayout;
+  if FIconName <> '' then
+    UpdateIconGeometry;
   UpdateIconColors;
 end;
 
@@ -579,6 +649,46 @@ begin
   if FIconColor <> Value then
   begin
     FIconColor := Value;
+
+    if not FHoverSetManually then
+      FIconColorHover := TIconTheme.Lighten(Value, 0.15);
+
+    if not FDownSetManually then
+      FIconColorDown := TIconTheme.Darken(Value, 0.15);
+
+    if not FDisabledSetManually then
+      FIconColorDisabled := TIconTheme.GetDisabledColor;
+
+    UpdateIconColors;
+  end;
+end;
+
+procedure TSVGSpeedButton.SetIconColorDisabled(const Value: TAlphaColor);
+begin
+  if FIconColorDisabled <> Value then
+  begin
+    FIconColorDisabled := Value;
+    FDisabledSetManually := True;
+    UpdateIconColors;
+  end;
+end;
+
+procedure TSVGSpeedButton.SetIconColorDown(const Value: TAlphaColor);
+begin
+  if FIconColorDown <> Value then
+  begin
+    FIconColorDown := Value;
+    FDownSetManually := True;
+    UpdateIconColors;
+  end;
+end;
+
+procedure TSVGSpeedButton.SetIconColorHover(const Value: TAlphaColor);
+begin
+  if FIconColorHover <> Value then
+  begin
+    FIconColorHover := Value;
+    FHoverSetManually := True;
     UpdateIconColors;
   end;
 end;
@@ -588,7 +698,12 @@ begin
   if FIconName <> Value then
   begin
     FIconName := Value;
-    UpdateIconGeometry;
+
+    // If style not yet loaded, defer update
+    if (FBasePath <> nil) and (FIconLayout <> nil) then
+      UpdateIconGeometry
+    else
+      Repaint; // schedule update for later
   end;
 end;
 

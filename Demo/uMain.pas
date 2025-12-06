@@ -10,7 +10,6 @@ uses
 type
 
   TForm2 = class(TForm)
-    PathLabel1: TPathLabel;
     SVGButton1: TSVGButton;
     SVGSpeedButton1: TSVGSpeedButton;
     procedure FormCreate(Sender: TObject);
@@ -51,7 +50,7 @@ begin
   BtnTrash.Width := 40;
   BtnTrash.Height := 40;
   BtnTrash.IconSize := 20;
-  BtnTrash.IconName := 'trash-duotone'; // expects icons\trash.svg
+  BtnTrash.IconName := 'trash'; // expects icons\trash.svg
 end;
 
 procedure TForm2.FormCreate(Sender: TObject);
