@@ -16,66 +16,44 @@ type
     FIconSize: Integer;
     FIconAlignment: TIconAlignment;
     FIconPadding: TBounds;
-
-    FIconColor: TAlphaColor;
-    FIconColorHover: TAlphaColor;
-    FIconColorDown: TAlphaColor;
-    FIconColorDisabled: TAlphaColor;
-    FIconSecondaryColor: TAlphaColor;
-
     FIconLayout: TLayout;
     FBasePath: TPath;
     FOverlayPath: TPath;
-
     FTextObj: TText;
-
-    FHoverSetManually: Boolean;
-    FDownSetManually: Boolean;
-    FDisabledSetManually: Boolean;
-
+    FIconColor: TAlphaColor;
+    FIconColorSet: Boolean;
+    function GetIconColor: TAlphaColor;
+    function GetIconColorDisabled: TAlphaColor;
+    function GetIconColorDown: TAlphaColor;
+    function GetIconColorHover: TAlphaColor;
     procedure IconPaddingChanged(Sender: TObject);
-
-    procedure SetIconName(const Value: string);
-    procedure SetIconSize(const Value: Integer);
     procedure SetIconAlignment(const Value: TIconAlignment);
+    procedure SetIconName(const Value: string);
     procedure SetIconPadding(const Value: TBounds);
-
-    procedure SetIconColor(const Value: TAlphaColor);
-    procedure SetIconColorDisabled(const Value: TAlphaColor);
-    procedure SetIconColorDown(const Value: TAlphaColor);
-    procedure SetIconColorHover(const Value: TAlphaColor);
-    procedure SetIconSecondaryColor(const Value: TAlphaColor);
-
+    procedure SetIconSize(const Value: Integer);
+    procedure UpdateIconColors;
     procedure UpdateIconGeometry;
     procedure UpdateIconLayout;
     procedure UpdateTextLayout;
-    procedure UpdateIconColors;
   protected
     procedure ApplyStyle; override;
-    procedure Resize; override;
-    procedure DoRealign; override;
-
     procedure DoMouseEnter; override;
     procedure DoMouseLeave; override;
+    procedure DoRealign; override;
+    procedure DoStyleChanged; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Single); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Single); override;
-
+    procedure Resize; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-
+    procedure SetFontColor(const AColor: TAlphaColor);
+    procedure SetIconColor(const AColor: TAlphaColor);
   published
     property IconName: string read FIconName write SetIconName;
-    property IconSize: Integer read FIconSize write SetIconSize default 20;
+    property IconSize: Integer read FIconSize write SetIconSize default 16;
     property IconAlignment: TIconAlignment read FIconAlignment write SetIconAlignment default iaLeft;
     property IconPadding: TBounds read FIconPadding write SetIconPadding;
-
-    property IconColor: TAlphaColor read FIconColor write SetIconColor;
-    property IconColorHover: TAlphaColor read FIconColorHover write SetIconColorHover;
-    property IconColorDown: TAlphaColor read FIconColorDown write SetIconColorDown;
-    property IconColorDisabled: TAlphaColor read FIconColorDisabled write SetIconColorDisabled;
-
-    property IconSecondaryColor: TAlphaColor read FIconSecondaryColor write SetIconSecondaryColor;
   end;
 
   TSVGSpeedButton = class(TSpeedButton)
@@ -84,66 +62,43 @@ type
     FIconSize: Integer;
     FIconAlignment: TIconAlignment;
     FIconPadding: TBounds;
-
-    FIconColor: TAlphaColor;
-    FIconColorHover: TAlphaColor;
-    FIconColorDown: TAlphaColor;
-    FIconColorDisabled: TAlphaColor;
-    FIconSecondaryColor: TAlphaColor;
-
     FIconLayout: TLayout;
     FBasePath: TPath;
     FOverlayPath: TPath;
-
     FTextObj: TText;
-
-    FHoverSetManually: Boolean;
-    FDownSetManually: Boolean;
-    FDisabledSetManually: Boolean;
-
+    FIconColor: TAlphaColor;
+    FIconColorSet: Boolean;
+    function GetIconColor: TAlphaColor;
+    function GetIconColorDisabled: TAlphaColor;
+    function GetIconColorDown: TAlphaColor;
+    function GetIconColorHover: TAlphaColor;
     procedure IconPaddingChanged(Sender: TObject);
-
-    procedure SetIconName(const Value: string);
-    procedure SetIconSize(const Value: Integer);
     procedure SetIconAlignment(const Value: TIconAlignment);
+    procedure SetIconName(const Value: string);
     procedure SetIconPadding(const Value: TBounds);
-
-    procedure SetIconColor(const Value: TAlphaColor);
-    procedure SetIconColorDisabled(const Value: TAlphaColor);
-    procedure SetIconColorDown(const Value: TAlphaColor);
-    procedure SetIconColorHover(const Value: TAlphaColor);
-    procedure SetIconSecondaryColor(const Value: TAlphaColor);
-
+    procedure SetIconSize(const Value: Integer);
+    procedure UpdateIconColors;
     procedure UpdateIconGeometry;
     procedure UpdateIconLayout;
     procedure UpdateTextLayout;
-    procedure UpdateIconColors;
   protected
     procedure ApplyStyle; override;
-    procedure Resize; override;
-    procedure DoRealign; override;
-
     procedure DoMouseEnter; override;
     procedure DoMouseLeave; override;
+    procedure DoRealign; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Single); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Single); override;
-
+    procedure Resize; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-
+    procedure SetFontColor(const AColor: TAlphaColor);
+    procedure SetIconColor(const AColor: TAlphaColor);
   published
     property IconName: string read FIconName write SetIconName;
-    property IconSize: Integer read FIconSize write SetIconSize default 20;
+    property IconSize: Integer read FIconSize write SetIconSize default 16;
     property IconAlignment: TIconAlignment read FIconAlignment write SetIconAlignment default iaCenter;
     property IconPadding: TBounds read FIconPadding write SetIconPadding;
-
-    property IconColor: TAlphaColor read FIconColor write SetIconColor;
-    property IconColorHover: TAlphaColor read FIconColorHover write SetIconColorHover;
-    property IconColorDown: TAlphaColor read FIconColorDown write SetIconColorDown;
-    property IconColorDisabled: TAlphaColor read FIconColorDisabled write SetIconColorDisabled;
-
-    property IconSecondaryColor: TAlphaColor read FIconSecondaryColor write SetIconSecondaryColor;
   end;
 
 procedure Register;
@@ -153,16 +108,7 @@ implementation
 uses
   System.Math;
 
-{ ----------------------------- Helpers ------------------------------ }
-
-//function ApplyOpacity(Color: TAlphaColor; Opacity: Single): TAlphaColor;
-//var
-//  C: TAlphaColorRec;
-//begin
-//  C := TAlphaColorRec(Color);
-//  C.A := Round(C.A * Opacity);
-//  Result := TAlphaColor(C);
-//end;
+{ Helpers }
 
 function FindTextControl(Styled: TStyledControl): TText;
 var
@@ -282,7 +228,7 @@ begin
   end;
 end;
 
-{ ========================== TSVGButton ========================= }
+{ TSVGButton }
 
 constructor TSVGButton.Create(AOwner: TComponent);
 begin
@@ -290,12 +236,6 @@ begin
 
   FIconSize := 16;
   FIconAlignment := iaLeft;
-
-  FIconColor := TIconTheme.GetPrimaryColor;
-  FIconColorHover := TIconTheme.Lighten(FIconColor, 0.15);
-  FIconColorDown := TIconTheme.Darken(FIconColor, 0.15);
-  FIconColorDisabled := TIconTheme.GetDisabledColor;
-  FIconSecondaryColor := TIconTheme.GetSecondaryColor;
 
   FIconPadding := TBounds.Create(TRectF.Empty);
   FIconPadding.OnChange := IconPaddingChanged;
@@ -336,11 +276,14 @@ end;
 procedure TSVGButton.ApplyStyle;
 begin
   inherited;
+
   FTextObj := FindTextControl(Self);
-  UpdateTextLayout;
-  if FIconName <> '' then
+  if FTextObj <> nil then
+  begin
     UpdateIconGeometry;
-  UpdateIconColors;
+    UpdateIconColors;
+    UpdateTextLayout;
+  end;
 end;
 
 procedure TSVGButton.IconPaddingChanged(Sender: TObject);
@@ -352,7 +295,7 @@ procedure TSVGButton.DoMouseEnter;
 begin
   inherited;
   if Enabled then
-    FBasePath.Fill.Color := FIconColorHover;
+    FBasePath.Fill.Color := GetIconColorHover;
 end;
 
 procedure TSVGButton.DoMouseLeave;
@@ -365,7 +308,7 @@ procedure TSVGButton.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: S
 begin
   inherited;
   if Enabled then
-    FBasePath.Fill.Color := FIconColorDown;
+    FBasePath.Fill.Color := GetIconColorDown;
 end;
 
 procedure TSVGButton.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -386,6 +329,46 @@ begin
   UpdateIconLayout;
 end;
 
+procedure TSVGButton.DoStyleChanged;
+begin
+  inherited;
+
+  UpdateIconColors;
+end;
+
+function TSVGButton.GetIconColor: TAlphaColor;
+begin
+  if FIconColorSet then
+    Result := FIconColor
+  else
+    if Assigned(FTextObj) then
+      Result := FTextObj.TextSettings.FontColor
+    else
+      Result := TextSettings.FontColor;
+end;
+
+function TSVGButton.GetIconColorDisabled: TAlphaColor;
+begin
+  Result := TIconTheme.GetDisabledColor;
+end;
+
+function TSVGButton.GetIconColorDown: TAlphaColor;
+begin
+  Result := TIconTheme.Darken(GetIconColor, 0.15);
+end;
+
+function TSVGButton.GetIconColorHover: TAlphaColor;
+begin
+  Result := TIconTheme.Lighten(GetIconColor, 0.15);
+end;
+
+procedure TSVGButton.SetFontColor(const AColor: TAlphaColor);
+begin
+  StyledSettings := StyledSettings - [TStyledSetting.FontColor];
+  FontColor := AColor;
+  UpdateIconColors;
+end;
+
 procedure TSVGButton.SetIconAlignment(const Value: TIconAlignment);
 begin
   if FIconAlignment <> Value then
@@ -395,53 +378,12 @@ begin
   end;
 end;
 
-procedure TSVGButton.SetIconColor(const Value: TAlphaColor);
+procedure TSVGButton.SetIconColor(const AColor: TAlphaColor);
 begin
-  if FIconColor <> Value then
-  begin
-    FIconColor := Value;
-
-    if not FHoverSetManually then
-      FIconColorHover := TIconTheme.Lighten(Value, 0.15);
-
-    if not FDownSetManually then
-      FIconColorDown := TIconTheme.Darken(Value, 0.15);
-
-    if not FDisabledSetManually then
-      FIconColorDisabled := TIconTheme.GetDisabledColor;
-
-    UpdateIconColors;
-  end;
-end;
-
-procedure TSVGButton.SetIconColorDisabled(const Value: TAlphaColor);
-begin
-  if FIconColorDisabled <> Value then
-  begin
-    FIconColorDisabled := Value;
-    FDisabledSetManually := True;
-    UpdateIconColors;
-  end;
-end;
-
-procedure TSVGButton.SetIconColorDown(const Value: TAlphaColor);
-begin
-  if FIconColorDown <> Value then
-  begin
-    FIconColorDown := Value;
-    FDownSetManually := True;
-    UpdateIconColors;
-  end;
-end;
-
-procedure TSVGButton.SetIconColorHover(const Value: TAlphaColor);
-begin
-  if FIconColorHover <> Value then
-  begin
-    FIconColorHover := Value;
-    FHoverSetManually := True;
-    UpdateIconColors;
-  end;
+  FIconColor := AColor;
+  FIconColorSet := True;
+  UpdateIconColors;
+  Repaint;
 end;
 
 procedure TSVGButton.SetIconName(const Value: string);
@@ -461,15 +403,6 @@ end;
 procedure TSVGButton.SetIconPadding(const Value: TBounds);
 begin
   FIconPadding.Assign(Value);
-end;
-
-procedure TSVGButton.SetIconSecondaryColor(const Value: TAlphaColor);
-begin
-  if FIconSecondaryColor <> Value then
-  begin
-    FIconSecondaryColor := Value;
-    UpdateIconColors;
-  end;
 end;
 
 procedure TSVGButton.SetIconSize(const Value: Integer);
@@ -504,7 +437,6 @@ begin
   end;
 
   UpdateIconLayout;
-  UpdateIconColors;
 end;
 
 procedure TSVGButton.UpdateIconLayout;
@@ -522,19 +454,19 @@ procedure TSVGButton.UpdateIconColors;
 begin
   if not Enabled then
   begin
-    FBasePath.Fill.Color := FIconColorDisabled;
+    FBasePath.Fill.Color := GetIconColorDisabled;
     if FOverlayPath.Visible then
-      FOverlayPath.Fill.Color := FIconColorDisabled;
+      FOverlayPath.Fill.Color := GetIconColorDisabled;
   end
   else
   begin
-    FBasePath.Fill.Color := FIconColor;
+    FBasePath.Fill.Color := GetIconColor;
     if FOverlayPath.Visible then
-      FOverlayPath.Fill.Color := FIconSecondaryColor;
+      FOverlayPath.Fill.Color := GetIconColor;
   end;
 end;
 
-{ ====================== TSVGSpeedButton ====================== }
+{ TSVGSpeedButton }
 
 constructor TSVGSpeedButton.Create(AOwner: TComponent);
 begin
@@ -542,12 +474,6 @@ begin
 
   FIconSize := 16;
   FIconAlignment := iaLeft;
-
-  FIconColor := TIconTheme.GetPrimaryColor;
-  FIconColorHover := TIconTheme.Lighten(FIconColor, 0.15);
-  FIconColorDown := TIconTheme.Darken(FIconColor, 0.15);
-  FIconColorDisabled := TIconTheme.GetDisabledColor;
-  FIconSecondaryColor := TIconTheme.GetSecondaryColor;
 
   FIconPadding := TBounds.Create(TRectF.Empty);
   FIconPadding.OnChange := IconPaddingChanged;
@@ -585,11 +511,14 @@ end;
 procedure TSVGSpeedButton.ApplyStyle;
 begin
   inherited;
+
   FTextObj := FindTextControl(Self);
-  UpdateTextLayout;
-  if FIconName <> '' then
+  if FTextObj <> nil then
+  begin
     UpdateIconGeometry;
-  UpdateIconColors;
+    UpdateIconColors;
+    UpdateTextLayout;
+  end;
 end;
 
 procedure TSVGSpeedButton.IconPaddingChanged(Sender: TObject);
@@ -601,7 +530,7 @@ procedure TSVGSpeedButton.DoMouseEnter;
 begin
   inherited;
   if Enabled then
-    FBasePath.Fill.Color := FIconColorHover;
+    FBasePath.Fill.Color := GetIconColorHover;
 end;
 
 procedure TSVGSpeedButton.DoMouseLeave;
@@ -614,7 +543,7 @@ procedure TSVGSpeedButton.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
 begin
   inherited;
   if Enabled then
-    FBasePath.Fill.Color := FIconColorDown;
+    FBasePath.Fill.Color := GetIconColorDown;
 end;
 
 procedure TSVGSpeedButton.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -635,6 +564,39 @@ begin
   UpdateIconLayout;
 end;
 
+function TSVGSpeedButton.GetIconColor: TAlphaColor;
+begin
+  if FIconColorSet then
+    Result := FIconColor
+  else
+    if Assigned(FTextObj) then
+      Result := FTextObj.TextSettings.FontColor
+    else
+      Result := TextSettings.FontColor;
+end;
+
+function TSVGSpeedButton.GetIconColorDisabled: TAlphaColor;
+begin
+  Result := TIconTheme.GetDisabledColor;
+end;
+
+function TSVGSpeedButton.GetIconColorDown: TAlphaColor;
+begin
+  Result := TIconTheme.Darken(GetIconColor, 0.15);
+end;
+
+function TSVGSpeedButton.GetIconColorHover: TAlphaColor;
+begin
+  Result := TIconTheme.Lighten(GetIconColor, 0.15);
+end;
+
+procedure TSVGSpeedButton.SetFontColor(const AColor: TAlphaColor);
+begin
+  StyledSettings := StyledSettings - [TStyledSetting.FontColor];
+  FontColor := AColor;
+  UpdateIconColors;
+end;
+
 procedure TSVGSpeedButton.SetIconAlignment(const Value: TIconAlignment);
 begin
   if FIconAlignment <> Value then
@@ -644,53 +606,12 @@ begin
   end;
 end;
 
-procedure TSVGSpeedButton.SetIconColor(const Value: TAlphaColor);
+procedure TSVGSpeedButton.SetIconColor(const AColor: TAlphaColor);
 begin
-  if FIconColor <> Value then
-  begin
-    FIconColor := Value;
-
-    if not FHoverSetManually then
-      FIconColorHover := TIconTheme.Lighten(Value, 0.15);
-
-    if not FDownSetManually then
-      FIconColorDown := TIconTheme.Darken(Value, 0.15);
-
-    if not FDisabledSetManually then
-      FIconColorDisabled := TIconTheme.GetDisabledColor;
-
-    UpdateIconColors;
-  end;
-end;
-
-procedure TSVGSpeedButton.SetIconColorDisabled(const Value: TAlphaColor);
-begin
-  if FIconColorDisabled <> Value then
-  begin
-    FIconColorDisabled := Value;
-    FDisabledSetManually := True;
-    UpdateIconColors;
-  end;
-end;
-
-procedure TSVGSpeedButton.SetIconColorDown(const Value: TAlphaColor);
-begin
-  if FIconColorDown <> Value then
-  begin
-    FIconColorDown := Value;
-    FDownSetManually := True;
-    UpdateIconColors;
-  end;
-end;
-
-procedure TSVGSpeedButton.SetIconColorHover(const Value: TAlphaColor);
-begin
-  if FIconColorHover <> Value then
-  begin
-    FIconColorHover := Value;
-    FHoverSetManually := True;
-    UpdateIconColors;
-  end;
+  FIconColor := AColor;
+  FIconColorSet := True;
+  UpdateIconColors;
+  Repaint;
 end;
 
 procedure TSVGSpeedButton.SetIconName(const Value: string);
@@ -710,15 +631,6 @@ end;
 procedure TSVGSpeedButton.SetIconPadding(const Value: TBounds);
 begin
   FIconPadding.Assign(Value);
-end;
-
-procedure TSVGSpeedButton.SetIconSecondaryColor(const Value: TAlphaColor);
-begin
-  if FIconSecondaryColor <> Value then
-  begin
-    FIconSecondaryColor := Value;
-    UpdateIconColors;
-  end;
 end;
 
 procedure TSVGSpeedButton.SetIconSize(const Value: Integer);
@@ -771,15 +683,15 @@ procedure TSVGSpeedButton.UpdateIconColors;
 begin
   if not Enabled then
   begin
-    FBasePath.Fill.Color := FIconColorDisabled;
+    FBasePath.Fill.Color := GetIconColorDisabled;
     if FOverlayPath.Visible then
-      FOverlayPath.Fill.Color := FIconColorDisabled;
+      FOverlayPath.Fill.Color := GetIconColorDisabled;
   end
   else
   begin
-    FBasePath.Fill.Color := FIconColor;
+    FBasePath.Fill.Color := GetIconColor;
     if FOverlayPath.Visible then
-      FOverlayPath.Fill.Color := FIconSecondaryColor;
+      FOverlayPath.Fill.Color := GetIconColor;
   end;
 end;
 

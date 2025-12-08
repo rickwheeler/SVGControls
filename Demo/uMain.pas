@@ -11,8 +11,8 @@ type
 
   TForm2 = class(TForm)
     SVGButton1: TSVGButton;
-    SVGSpeedButton1: TSVGSpeedButton;
     procedure FormCreate(Sender: TObject);
+    procedure SVGButton1Click(Sender: TObject);
   private
     procedure CreateDemoControls;
   public
@@ -43,6 +43,7 @@ begin
   BtnSave.IconName := 'save';   // expects icons\save.svg
   BtnSave.IconPadding.Left := 4;
   BtnSave.IconAlignment := iaLeft;
+  BtnSave.SetFontColor(TAlphaColorRec.Green);
 
   var BtnTrash := TSVGSpeedButton.Create(Self);
   BtnTrash.Parent := Self;
@@ -61,6 +62,11 @@ begin
     IconManager.AddSearchPath(IconPath);
 
   CreateDemoControls;
+end;
+
+procedure TForm2.SVGButton1Click(Sender: TObject);
+begin
+  SVGButton1.SetIconColor(TAlphaColorRec.Aqua);
 end;
 
 end.

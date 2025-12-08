@@ -7,14 +7,21 @@ uses
   FMX.Types, System.UITypes, FMX.Graphics, SVG.Utils;
 
 type
+
   TIconManager = class
   private
     FIcons: TDictionary<string, TSVGIconData>;
     FSearchPaths: TList<string>;
     FDefaultSize: Integer;
+
+    class var FIconManager: TIconManager;
     function FindSVGFile(const Name: string): string;
     procedure EnsureLoaded(const Name: string);
   public
+    class constructor Create;
+    class destructor Destroy;
+    class function Instance: TIconManager;
+
     constructor Create;
     destructor Destroy; override;
 
@@ -35,15 +42,29 @@ type
     property DefaultSize: Integer read FDefaultSize write FDefaultSize;
   end;
 
-var
-  IconManager: TIconManager;
+function IconManager: TIconManager;
 
 implementation
 
 uses
   System.IOUtils, FMX.Objects; // , FMX.Canvas;
 
+function IconManager: TIconManager;
+begin
+  Result := TIconManager.Instance;
+end;
+
 { TIconManager }
+
+class constructor TIconManager.Create;
+begin
+  FIconManager := TIconManager.Create;
+end;
+
+class destructor TIconManager.Destroy;
+begin
+  FIconManager.Free;
+end;
 
 constructor TIconManager.Create;
 begin
@@ -121,6 +142,11 @@ var
 begin
   N := Name.ToLower;
   Result := FIcons.ContainsKey(N) or (FindSVGFile(N) <> '');
+end;
+
+class function TIconManager.Instance: TIconManager;
+begin
+  Result := FIconManager;
 end;
 
 function TIconManager.GetIconData(const Name: string): TSVGIconData;
@@ -207,14 +233,5 @@ begin
     P2.Free;
   end;
 end;
-
-initialization
-
-IconManager := TIconManager.Create;
-
-finalization
-
-IconManager.Free;
-IconManager := nil;
 
 end.
