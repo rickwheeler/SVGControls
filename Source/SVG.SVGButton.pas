@@ -277,6 +277,8 @@ procedure TSVGButton.ApplyStyle;
 begin
   inherited;
 
+  Cursor := crHandPoint;
+
   FTextObj := FindTextControl(Self);
   if FTextObj <> nil then
   begin
@@ -338,6 +340,14 @@ end;
 
 function TSVGButton.GetIconColor: TAlphaColor;
 begin
+  if csDesigning in ComponentState then
+  begin
+    if FIconColorSet then
+      Exit(FIconColor)
+    else
+      Exit($FF000000); // safe black default
+  end;
+
   if FIconColorSet then
     Result := FIconColor
   else
@@ -512,6 +522,8 @@ procedure TSVGSpeedButton.ApplyStyle;
 begin
   inherited;
 
+  Cursor := crHandPoint;
+
   FTextObj := FindTextControl(Self);
   if FTextObj <> nil then
   begin
@@ -566,6 +578,14 @@ end;
 
 function TSVGSpeedButton.GetIconColor: TAlphaColor;
 begin
+  if csDesigning in ComponentState then
+  begin
+    if FIconColorSet then
+      Exit(FIconColor)
+    else
+      Exit($FF000000); // safe black default
+  end;
+
   if FIconColorSet then
     Result := FIconColor
   else
