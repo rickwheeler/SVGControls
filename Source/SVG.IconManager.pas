@@ -89,7 +89,14 @@ procedure TIconManager.AddSearchPath(const Path: string);
 begin
   if (Path <> '') and DirectoryExists(Path) then
     if not FSearchPaths.Contains(Path) then
+    begin
       FSearchPaths.Add(Path);
+
+      var Dirs := System.IOUtils.TDirectory.GetDirectories(Path);
+      if Length(Dirs) > 0 then
+        for var Dir in Dirs do
+          AddSearchPath(Dir);
+    end;
 end;
 
 function TIconManager.FindSVGFile(const Name: string): string;

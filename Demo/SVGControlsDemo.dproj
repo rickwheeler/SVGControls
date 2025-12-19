@@ -273,14 +273,27 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="uMain.pas">
-            <Form>Form2</Form>
-            <FormType>fmx</FormType>
+        <DCCReference Include="GD.Styles.StyleBooks.pas">
+            <Form>StyleBooks</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="GD.Styles.SvgIcons.pas">
+            <Form>SvgIcons</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Source\SVG.IconManager.pas"/>
-        <DCCReference Include="..\Source\SVG.Utils.pas"/>
         <DCCReference Include="..\Source\SVG.IconTheme.pas"/>
         <DCCReference Include="..\Source\SVG.SVGButton.pas"/>
+        <DCCReference Include="..\Source\SVG.Utils.pas"/>
+        <DCCReference Include="uMain.pas">
+            <Form>Form2</Form>
+        </DCCReference>
+        <DCCReference Include="uViewAllForm.pas">
+            <Form>ViewAllForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\SVG.SVGPopupMenu.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

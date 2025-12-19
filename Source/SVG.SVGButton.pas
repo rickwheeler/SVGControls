@@ -44,6 +44,7 @@ type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Single); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Single); override;
     procedure Resize; override;
+    procedure SetEnabled(const Value: Boolean); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -59,7 +60,7 @@ type
   TSVGSpeedButton = class(TSpeedButton)
   private
     FIconName: string;
-    FIconSize: Integer;
+    FIconSize: Single;
     FIconAlignment: TIconAlignment;
     FIconPadding: TBounds;
     FIconLayout: TLayout;
@@ -76,7 +77,7 @@ type
     procedure SetIconAlignment(const Value: TIconAlignment);
     procedure SetIconName(const Value: string);
     procedure SetIconPadding(const Value: TBounds);
-    procedure SetIconSize(const Value: Integer);
+    procedure SetIconSize(const Value: Single);
     procedure UpdateIconColors;
     procedure UpdateIconGeometry;
     procedure UpdateIconLayout;
@@ -86,9 +87,11 @@ type
     procedure DoMouseEnter; override;
     procedure DoMouseLeave; override;
     procedure DoRealign; override;
+
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Single); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Single); override;
     procedure Resize; override;
+    procedure SetEnabled(const Value: Boolean); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -96,8 +99,8 @@ type
     procedure SetIconColor(const AColor: TAlphaColor);
   published
     property IconName: string read FIconName write SetIconName;
-    property IconSize: Integer read FIconSize write SetIconSize default 16;
-    property IconAlignment: TIconAlignment read FIconAlignment write SetIconAlignment default iaCenter;
+    property IconSize: Single read FIconSize write SetIconSize;
+    property IconAlignment: TIconAlignment read FIconAlignment write SetIconAlignment default iaLeft;
     property IconPadding: TBounds read FIconPadding write SetIconPadding;
   end;
 
@@ -253,7 +256,7 @@ begin
   FBasePath.Stored := False;
   FBasePath.HitTest := False;
   FBasePath.Align := TAlignLayout.Contents;
-  FBasePath.WrapMode := TPathWrapMode.Stretch;
+  FBasePath.WrapMode := TPathWrapMode.Fit;
   FBasePath.Stroke.Kind := TBrushKind.None;
 
   // Overlay path (duotone)
@@ -262,7 +265,7 @@ begin
   FOverlayPath.Stored := False;
   FOverlayPath.HitTest := False;
   FOverlayPath.Align := TAlignLayout.Contents;
-  FOverlayPath.WrapMode := TPathWrapMode.Stretch;
+  FOverlayPath.WrapMode := TPathWrapMode.Fit;
   FOverlayPath.Stroke.Kind := TBrushKind.None;
   FOverlayPath.Visible := False;
 end;
@@ -280,6 +283,7 @@ begin
   Cursor := crHandPoint;
 
   FTextObj := FindTextControl(Self);
+
   if FTextObj <> nil then
   begin
     UpdateIconGeometry;
@@ -349,12 +353,12 @@ begin
   end;
 
   if FIconColorSet then
-    Result := FIconColor
+    Exit(FIconColor);
+
+  if Assigned(FTextObj) then
+    Result := FTextObj.TextSettings.FontColor
   else
-    if Assigned(FTextObj) then
-      Result := FTextObj.TextSettings.FontColor
-    else
-      Result := TextSettings.FontColor;
+    Result := TextSettings.FontColor;
 end;
 
 function TSVGButton.GetIconColorDisabled: TAlphaColor;
@@ -370,6 +374,17 @@ end;
 function TSVGButton.GetIconColorHover: TAlphaColor;
 begin
   Result := TIconTheme.Lighten(GetIconColor, 0.15);
+end;
+
+procedure TSVGButton.SetEnabled(const Value: Boolean);
+begin
+  if Enabled <> Value then
+  begin
+    inherited;
+    UpdateIconColors;
+  end
+  else
+    inherited;
 end;
 
 procedure TSVGButton.SetFontColor(const AColor: TAlphaColor);
@@ -499,7 +514,7 @@ begin
   FBasePath.Stored := False;
   FBasePath.HitTest := False;
   FBasePath.Align := TAlignLayout.Contents;
-  FBasePath.WrapMode := TPathWrapMode.Stretch;
+  FBasePath.WrapMode := TPathWrapMode.Fit;
   FBasePath.Stroke.Kind := TBrushKind.None;
 
   FOverlayPath := TPath.Create(FIconLayout);
@@ -507,7 +522,7 @@ begin
   FOverlayPath.Stored := False;
   FOverlayPath.HitTest := False;
   FOverlayPath.Align := TAlignLayout.Contents;
-  FOverlayPath.WrapMode := TPathWrapMode.Stretch;
+  FOverlayPath.WrapMode := TPathWrapMode.Fit;
   FOverlayPath.Stroke.Kind := TBrushKind.None;
   FOverlayPath.Visible := False;
 end;
@@ -587,12 +602,12 @@ begin
   end;
 
   if FIconColorSet then
-    Result := FIconColor
+    Exit(FIconColor);
+
+  if Assigned(FTextObj) then
+    Result := FTextObj.TextSettings.FontColor
   else
-    if Assigned(FTextObj) then
-      Result := FTextObj.TextSettings.FontColor
-    else
-      Result := TextSettings.FontColor;
+    Result := TextSettings.FontColor;
 end;
 
 function TSVGSpeedButton.GetIconColorDisabled: TAlphaColor;
@@ -608,6 +623,17 @@ end;
 function TSVGSpeedButton.GetIconColorHover: TAlphaColor;
 begin
   Result := TIconTheme.Lighten(GetIconColor, 0.15);
+end;
+
+procedure TSVGSpeedButton.SetEnabled(const Value: Boolean);
+begin
+  if Enabled <> Value then
+  begin
+    inherited;
+    UpdateIconColors;
+  end
+  else
+    inherited;
 end;
 
 procedure TSVGSpeedButton.SetFontColor(const AColor: TAlphaColor);
@@ -653,7 +679,7 @@ begin
   FIconPadding.Assign(Value);
 end;
 
-procedure TSVGSpeedButton.SetIconSize(const Value: Integer);
+procedure TSVGSpeedButton.SetIconSize(const Value: Single);
 begin
   if FIconSize <> Value then
   begin

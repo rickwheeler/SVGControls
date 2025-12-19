@@ -3,14 +3,14 @@ object Form2: TForm2
   Top = 0
   Caption = 'Form2'
   ClientHeight = 480
-  ClientWidth = 640
+  ClientWidth = 1340
   Position = ScreenCenter
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
-  OnCreate = FormCreate
   DesignerMasterStyle = 0
-  object SVGButton1: TSVGButton
+  object ViewAllIconsButton: TSVGButton
+    Cursor = crHandPoint
     StyledSettings = [Family, Size, Style]
     Position.X = 104.000000000000000000
     Position.Y = 232.000000000000000000
@@ -18,9 +18,120 @@ object Form2: TForm2
     Size.Height = 49.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
-    Text = 'SVGButton1'
+    Text = 'View All Icons'
     TextSettings.FontColor = claCrimson
-    OnClick = SVGButton1Click
+    Visible = False
+    OnClick = ViewAllIconsButtonClick
     IconName = 'Save'
+  end
+  object DarkButton: TSVGSpeedButton
+    Cursor = crHandPoint
+    Position.X = 96.000000000000000000
+    Position.Y = 328.000000000000000000
+    Size.Width = 129.000000000000000000
+    Size.Height = 41.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Dark'
+    OnClick = DarkButtonClick
+    IconSize = 16.000000000000000000
+  end
+  object LightButton: TSVGSpeedButton
+    Cursor = crHandPoint
+    Position.X = 272.000000000000000000
+    Position.Y = 328.000000000000000000
+    Size.Width = 129.000000000000000000
+    Size.Height = 41.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Light'
+    OnClick = LightButtonClick
+    IconSize = 16.000000000000000000
+  end
+  object Panel1: TPanel
+    Position.X = 464.000000000000000000
+    Position.Y = 328.000000000000000000
+    Size.Width = 120.000000000000000000
+    Size.Height = 88.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 5
+    OnMouseDown = Panel1MouseDown
+    object Label1: TLabel
+      Align = Center
+      AutoSize = True
+      Size.Width = 77.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = False
+      Text = 'Right Click Me'
+      TabOrder = 0
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 512
+    Top = 248
+  end
+  object SVGSpeedButton1: TSVGSpeedButton
+    Cursor = crHandPoint
+    Position.X = 944.000000000000000000
+    Position.Y = 128.000000000000000000
+    Size.Width = 225.000000000000000000
+    Size.Height = 113.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'SVGSpeedButton1'
+    IconName = 'trash'
+    IconSize = 64.000000000000000000
+    IconAlignment = iaTop
+  end
+  object Button1: TButton
+    Position.X = 96.000000000000000000
+    Position.Y = 384.000000000000000000
+    TabOrder = 10
+    Text = 'Button1'
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Position.X = 208.000000000000000000
+    Position.Y = 384.000000000000000000
+    TabOrder = 11
+    Text = 'Button2'
+  end
+  object ImageList1: TImageList
+    Source = <
+      item
+        MultiResBitmap.Height = 32
+        MultiResBitmap.Width = 32
+        MultiResBitmap.LoadSize = 0
+        MultiResBitmap.TransparentColor = 536870912
+        MultiResBitmap = <
+          item
+            Width = 32
+            Height = 32
+            PNG = {
+              89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+              F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+              0105494441545847ED97C18DC2400C45DFA482944009D049B6835001A2042A80
+              0E52C252021DD0021D241D984326526446221ECF467BC893BE886C0E4F0E630D
+              3C4164413A10401A903ED1CF490F52ED59463DFB9C9EBDD44010900138EB6EA4
+              06AEC01DF8015AA0D35FF220E368E3E36776715CBFB357A047E949A57CBEF200
+              8E3137DDCC418C1348F53C314FA0349B804BA0C43E300B34401F7F854FDDCCC0
+              2C5072139223E02140B8ABDAAA021DC845D5561548B1096C02AB0A34C049D556
+              15A8E38D6A8E59E0A50B4ECC028F71A31180836E6660169833E842062E81126C
+              026681E928B589339D8518AFE56DE26AEDC9FFF86BB6247F35812A8C3BE52BD3
+              992FB90907E00D858C339B7C5042A60000000049454E44AE426082}
+            FileName = 'C:\temp\icons\door-left-180.bmp'
+          end>
+        Name = 'door-left-180'
+      end>
+    Destination = <
+      item
+        Layers = <
+          item
+            Name = 'door-left-180'
+            SourceRect.Right = 32.000000000000000000
+            SourceRect.Bottom = 32.000000000000000000
+          end>
+      end>
+    Left = 392
+    Top = 160
   end
 end

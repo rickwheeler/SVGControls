@@ -1,0 +1,51 @@
+object ViewAllForm: TViewAllForm
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 480
+  ClientWidth = 640
+  Position = MainFormCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object ButtonsLayout: TFlowLayout
+    Align = Client
+    Size.Width = 640.000000000000000000
+    Size.Height = 430.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Justify = Left
+    JustifyLastLine = Left
+    FlowDirection = LeftToRight
+    HorizontalGap = 8.000000000000000000
+    VerticalGap = 8.000000000000000000
+  end
+  object ToolbarLayout: TFlowLayout
+    Align = Top
+    Size.Width = 640.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Justify = Left
+    JustifyLastLine = Left
+    FlowDirection = LeftToRight
+    HorizontalGap = 8.000000000000000000
+    object LoadButtonsButton: TButton
+      Size.Width = 150.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Load Buttons'
+      OnClick = LoadButtonsButtonClick
+    end
+    object LoadSpeedButtonsSpeedButton: TSpeedButton
+      Position.X = 158.000000000000000000
+      Size.Width = 150.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Load Speed Buttons'
+      OnClick = LoadSpeedButtonsSpeedButtonClick
+    end
+  end
+end
